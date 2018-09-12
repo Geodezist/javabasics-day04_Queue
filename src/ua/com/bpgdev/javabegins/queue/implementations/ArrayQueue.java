@@ -3,6 +3,7 @@ package ua.com.bpgdev.javabegins.queue.implementations;
 import ua.com.bpgdev.javabegins.queue.interfaces.Queue;
 
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 
 public class ArrayQueue implements Queue {
 
@@ -24,14 +25,15 @@ public class ArrayQueue implements Queue {
             System.arraycopy(array, 0, newArray, 0, array.length);
             array = newArray;
         }
-        array[size] = value;
+        System.arraycopy(array,0,array,1,size);
+        array[0] = value;
         size++;
     }
 
     @Override
     public Object dequeue() {
         if (size == 0) {
-            throw new IndexOutOfBoundsException("Size of Queue = " + Integer.toString(size) + ". Maybe the Queue is empty.");
+            throw new NoSuchElementException("Size of Queue = " + Integer.toString(size) + ". Maybe the Queue is empty.");
         }
         Object result;
         result = array[size - 1];
@@ -53,7 +55,9 @@ public class ArrayQueue implements Queue {
     @Override
     public boolean remove(Object value) {
         boolean result = false;
-        for (int index = 0; index < size; index++) {
+
+        int index = 0;
+        while (index < size) {
             if (array[index].equals(value)) {
                 System.arraycopy(array, index + 1, array, index, size - index - 1);
                 array[size - 1] = null;
@@ -61,6 +65,7 @@ public class ArrayQueue implements Queue {
                 index--;
                 result = true;
             }
+            index++;
         }
         return result;
     }
